@@ -14,4 +14,10 @@ defmodule QuestionTest do
 
     assert Keyword.fetch!(substitutions, :left) == generators.left.()
   end
+
+  test "building creates asked question text" do
+    question = build_question(generators: addition_generators([1], [2]))
+
+    assert question.asked == "1 + 2"
+  end
 end

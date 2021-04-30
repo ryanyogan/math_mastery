@@ -7,4 +7,11 @@ defmodule QuestionTest do
 
     assert question.substitutions == [left: 1, right: 2]
   end
+
+  test "function generators are called" do
+    generators = addition_generators(fn -> 42 end, [0])
+    substitutions = build_question(generators: generators).substitutions
+
+    assert Keyword.fetch!(substitutions, :left) == generators.left.()
+  end
 end

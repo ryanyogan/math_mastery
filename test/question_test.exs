@@ -20,4 +20,25 @@ defmodule QuestionTest do
 
     assert question.asked == "1 + 2"
   end
+
+  test "a random choice is made from list generators" do
+    # If you would like to speed up the test, narrow down
+    # the provided range in `Enum.to_list/1`
+    generators = addition_generators(Enum.to_list(1..9), [0])
+
+    assert eventually_match(generators, 1)
+    assert eventually_match(generators, 9)
+  end
+
+  # The core has a few side-effects, one being random template
+  # selection, thus we just generate new questions until
+  # we have found a substitution that matches...
+  defp eventually_match(generators, answer) do
+    Stream.repeatedly(fn ->
+      build_question(generators: generators).substitutions
+    end)
+    |> Enum.find(fn substitution ->
+      Keyword.fetch!(substitution, :left) == answer
+    end)
+  end
 end

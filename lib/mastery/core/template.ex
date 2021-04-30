@@ -13,4 +13,13 @@ defmodule Mastery.Core.Template do
     :generators,
     :checker
   ]
+
+  def new(template_fields) do
+    raw = Keyword.fetch!(template_fields, :raw)
+
+    struct!(
+      __MODULE__,
+      Keyword.put(template_fields, :compiled, EEx.compile_string(raw))
+    )
+  end
 end

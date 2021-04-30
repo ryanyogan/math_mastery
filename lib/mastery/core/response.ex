@@ -12,4 +12,18 @@ defmodule Mastery.Core.Response do
     :is_correct?,
     :timestamp
   ]
+
+  def new(%{current_question: question, title: title}, email, answer) do
+    template = question.template
+
+    %__MODULE__{
+      quiz_title: title,
+      template_name: template.name,
+      question_responded_to: question.asked,
+      email: email,
+      answer: answer,
+      is_correct?: template.checker.(question.substitutions, answer),
+      timestamp: DateTime.utc_now()
+    }
+  end
 end

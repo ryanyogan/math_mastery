@@ -2,14 +2,6 @@ defmodule Mastery.Boundary.QuizSession do
   use GenServer
   alias Mastery.Core.{Quiz, Response}
 
-  def select_question(session) do
-    GenServer.call(session, :select_question)
-  end
-
-  def answer_question(session, answer) do
-    GenServer.call(session, {:answer_question, answer})
-  end
-
   @impl true
   def init({quiz, email}) do
     {:ok, {quiz, email}}

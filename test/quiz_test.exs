@@ -11,6 +11,15 @@ defmodule QuizTest do
       other_template = eventually_pick_other_template(quiz, first_template)
       assert first_template != other_template
     end
+
+    test "templates are unique until cycle repeats", %{quiz: quiz} do
+      first_quiz = Quiz.select_question(quiz)
+      second_quiz = Quiz.select_question(first_quiz)
+      reset_quiz = Quiz.select_question(second_quiz)
+
+      assert template(first_quiz) != template(second_quiz)
+      assert template(reset_quiz) in [template(first_quiz), template(second_quiz)]
+    end
   end
 
   defp quiz(context) do

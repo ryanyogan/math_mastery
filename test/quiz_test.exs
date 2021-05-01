@@ -22,6 +22,28 @@ defmodule QuizTest do
     end
   end
 
+  describe "a quiz that always adds one and two" do
+    setup [:quiz_always_adds_one_and_two]
+
+    test "a wrong answer resets mastery", %{quiz: quiz} do
+      quiz
+      |> Quiz.select_question()
+      |> assert_more_questions()
+      |> right_answer()
+      |> Quiz.select_question()
+      |> assert_more_questions()
+      |> wrong_answer()
+      |> Quiz.select_question()
+      |> assert_more_questions()
+      |> right_answer()
+      |> Quiz.select_question()
+      |> assert_more_questions()
+      |> right_answer()
+      |> Quiz.select_question()
+      |> refute_more_questions()
+    end
+  end
+
   defp quiz(context) do
     {:ok, Map.put(context, :quiz, build_quiz_with_two_templates())}
   end
@@ -40,7 +62,7 @@ defmodule QuizTest do
     fields = template_fields(generators: addition_generators([1], [2]))
 
     quiz =
-      build_quiz(mastery: 2)
+      build_quiz(questions_until_mastery: 2)
       |> Quiz.add_template(fields)
 
     {:ok, Map.put(context, :quiz, quiz)}

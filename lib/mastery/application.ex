@@ -7,7 +7,17 @@ defmodule Mastery.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {QuizManager, [name: QuizManager]}
+      {QuizManager, [name: QuizManager]},
+      {Registry,
+       [
+         name: Mastery.Registry.QuizSession,
+         keys: :unique
+       ]},
+      {DynamicSupervisor,
+       [
+         name: Mastery.Supervisor.QuizSession,
+         strategy: :one_for_one
+       ]}
     ]
 
     opts = [strategy: :one_for_one, name: Mastery.Supervisor]

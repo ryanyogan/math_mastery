@@ -4,18 +4,6 @@ defmodule Mastery do
   alias Mastery.Core.Quiz
 
   @doc """
-  Use to start a new `QuizManager` GenServer which will
-  create a link to the caller.
-
-  A single `QuizManager` will be spawned, unlike the `SessionManager`
-  which is dynamic per user session, the `QuizManager` stores
-  all the global `Quiz` state.
-  """
-  def start_quiz_manager do
-    GenServer.start_link(QuizManager, %{}, name: QuizManager)
-  end
-
-  @doc """
   `Mastery.build_quiz/1` creates a new `Quiz` which is placed in the
   state of the `QuizManager`
 
@@ -37,16 +25,16 @@ defmodule Mastery do
 
   def take_quiz(title, email) do
     with %Quiz{} = quiz <- QuizManager.lookup_quiz_by_title(title),
-         {:ok, session} <- GenServer.start_link(QuizSession, {quiz, email}),
-         do: session,
+         {:ok, _} <- QuizSession.take_quiz(quiz, email),
+         do: {title, email},
          else: (error -> error)
   end
 
-  def select_question(session) do
-    GenServer.call(session, :select_question)
+  def select_question(name) do
+    QuizSession.select_question(name)
   end
 
-  def answer_question(session, answer) do
-    GenServer.call(session, {:answer_question, answer})
+  def answer_question(name, answer) do
+    QuizSession.answer_question(name, answer)
   end
 end

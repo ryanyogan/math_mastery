@@ -13,6 +13,7 @@ defmodule Mastery.Application do
          name: Mastery.Registry.QuizSession,
          keys: :unique
        ]},
+      {Mastery.Boundary.Proctor, [name: Mastery.Boundary.Proctor]},
       {DynamicSupervisor,
        [
          name: Mastery.Supervisor.QuizSession,

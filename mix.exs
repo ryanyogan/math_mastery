@@ -19,6 +19,8 @@ defmodule Mastery.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:mastery_persistence, path: "./mastery_persistence"}
+    ]
   end
 end
